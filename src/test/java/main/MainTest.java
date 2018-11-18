@@ -13,27 +13,11 @@ public class MainTest extends TestCase {
     }
 
     public void testReadBase()throws Exception{
-        Gson gson = new Gson();
-        DatabaseMap dbMap = gson.fromJson(new FileReader("./src/test/java/main/test.json"), DatabaseMap.class);
+        DatabaseMap map = DatabaseMap.read("./src/test/java/main/test2.json");
+        System.out.println(map);
+        //write to file...
+        map.write("./src/test/java/main/test2-out.json");
         System.out.println("done");
     }
 
-    public void testMain(){
-        String[] test = { "Chrome", "Firefox", "Internet Explorer", "Safari",
-                "Opera", "Morrowind", "Oblivion", "NFS", "Half Life 2",
-                "Hitman", "Morrowind", "Oblivion", "NFS", "Half Life 2"
-        };
-
-        bases = new ArrayList<>();
-
-        for (String s: test)
-        {
-            bases.put(s, null);
-        }
-
-        for (Database d: bases)
-        {
-            dlm.addElement(d);
-        }
-    }
 }

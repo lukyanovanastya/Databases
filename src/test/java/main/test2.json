@@ -1,0 +1,1 @@
+{"DB1":{"table1":{"col1":{"type":"STRING","data":[a,b,c,d]},"col2":{"type":"INTEGER", "data":[1,2,3,4]}}, "table2":{"col3":{"type":"CHAR","data":[e,f,g,h]}}}}

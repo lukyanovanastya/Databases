@@ -1,6 +1,6 @@
 package main;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-public class Columns extends HashMap<String,Data> {
+public class Columns extends LinkedHashMap<String, Column> {
 }

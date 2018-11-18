@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.io.*;
 
 public class Database {
+    /*
     String name;
     HashMap<String,HashMap<String, HashMap<String, ArrayList>>> data;
 
@@ -65,4 +66,5 @@ public class Database {
     public String toString(){
         return this.name;
     }
+    */
 }

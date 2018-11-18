@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import static main.DatabaseMap.getInstance;
 
 public class Main {
     private JList list;
@@ -15,7 +16,7 @@ public class Main {
     private JButton save;
     private JScrollPane scrollPane;
     private DatabaseMap bases;
-    private DefaultListModel<Database> dlm = new DefaultListModel<>();
+    private DefaultListModel<String> dlm = new DefaultListModel<>();
 
     public Main() {
         JFrame frame = new JFrame("Main");
@@ -30,45 +31,56 @@ public class Main {
         list.setModel(dlm);
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
+        bases = new DatabaseMap();
+
+        String[] test = { "Chrome", "Firefox", "Internet Explorer", "Safari",
+                "Opera", "Morrowind", "Oblivion", "NFS", "Half Life 2",
+                "Hitman", "Morrowind", "Oblivion", "NFS", "Half Life 2"
+        };
+
+        for (String s: test)
+        {
+            addBase(s, null);
+        }
 
 
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Database d = new Database(null);
                 frame.setVisible(false);
-                NewDB.run(frame, d);
-                addBase(d);
+                String name = NewDB.run(frame, null);
+                if(name!=null) addBase(name, null);
             }
         });
 
         edit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Database d = (Database)list.getSelectedValue();
-                //dlm.removeElement(d);
+                String name = (String)list.getSelectedValue();
                 frame.setVisible(false);
-                NewDB.run(frame, d);
-                //addBase(d);
+                String newName = NewDB.run(frame, name);
+                DatabaseNew db = bases.get(name);
+                deleteBase(name);
+                addBase(newName, db);
             }
         });
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Database d = (Database)list.getSelectedValue();
-                deleteBase(d);
+                String name = (String)list.getSelectedValue();
+                deleteBase(name);
             }
         });
     }
 
-    public void addBase(Database db){
-        bases.add(db);
-        dlm.addElement(db);
+    public void addBase(String name, DatabaseNew db){
+        bases.put(name, db);
+        dlm.addElement(name);
     }
 
-    public void deleteBase(Database db){
-        bases.remove(db);
-        dlm.removeElement(db);
+    public void deleteBase(String name){
+        bases.remove(name);
+        dlm.removeElement(name);
     }
 
     public static void main(String[] args) {

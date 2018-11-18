@@ -10,18 +10,19 @@ public class NewDB extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextField text;
+    private JTextField textBox;
+    static String text=null;
 
-    public NewDB(JFrame root, Database d) {
+    public NewDB(JFrame root, String name) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        if(d!=null)text.setText(d.name);
+        if(name!=null)textBox.setText(name);
 
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                d.name = text.getText();
+                text = textBox.getText();
                 root.setVisible(true);
                 dispose();
             }
@@ -29,9 +30,10 @@ public class NewDB extends JDialog {
     }
 
 
-    public static void run(JFrame root, Database d){
-        NewDB dialog = new NewDB(root, d);
+    public static String run(JFrame root, String name){
+        NewDB dialog = new NewDB(root, name);
         dialog.pack();
         dialog.setVisible(true);
+        return text;
     }
 }
