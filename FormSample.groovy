@@ -8,7 +8,7 @@ import java.awt.Component
 class DB{
 	String name
 	String toString(){
-		return "["+name+"]"+this.hashCode()
+		return name
 	}
 }
 

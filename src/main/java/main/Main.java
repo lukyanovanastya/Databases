@@ -1,7 +1,6 @@
 package main;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,7 +16,7 @@ public class Main {
     private JButton save;
     private JScrollPane scrollPane;
     //private DatabaseMap bases;
-    //private AbstractListModel<String> dlm = DatabaseMapModel();//new DefaultListModel<>();
+    //private AbstractListModel<String> dlm = GenericListModel();//new DefaultListModel<>();
 
     public Main() {
         JFrame frame = new JFrame("Main");
@@ -29,7 +28,7 @@ public class Main {
 
         scrollPane.setViewportView(list);
         list.setLayoutOrientation(JList.VERTICAL);
-        list.setModel(new DatabaseMapModel(getInstance()));
+        list.setModel(new GenericListModel(getInstance()));
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         String[] test = {"Chrome", "Firefox", "Internet Explorer", "Safari",
@@ -40,6 +39,7 @@ public class Main {
         for (String s : test) {
             getInstance().add(s);
         }
+        ((GenericListModel)list.getModel()).fireChange();
 
 
         create.addActionListener(new ActionListener() {
@@ -67,11 +67,9 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    System.out.println("model="+list.getModel());
-                    System.out.println("model.size="+list.getModel().getSize());
                     Database db = (Database) list.getSelectedValue();
-                    System.out.println("remove db "+db);
-                    System.out.println("remove db -> "+getInstance().remove(db));
+                    getInstance().remove(db);
+                    ((GenericListModel)list.getModel()).fireChange();
                 } catch (Throwable t) {
                     System.out.println(t.toString());
                 }
