@@ -1,9 +1,10 @@
 package main;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+
 import static main.DatabaseMap.getInstance;
 
 public class Main {
@@ -15,8 +16,8 @@ public class Main {
     private JButton read;
     private JButton save;
     private JScrollPane scrollPane;
-    private DatabaseMap bases;
-    private DefaultListModel<String> dlm = new DefaultListModel<>();
+    //private DatabaseMap bases;
+    //private AbstractListModel<String> dlm = DatabaseMapModel();//new DefaultListModel<>();
 
     public Main() {
         JFrame frame = new JFrame("Main");
@@ -28,19 +29,16 @@ public class Main {
 
         scrollPane.setViewportView(list);
         list.setLayoutOrientation(JList.VERTICAL);
-        list.setModel(dlm);
+        list.setModel(new DatabaseMapModel(getInstance()));
         list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
-        bases = new DatabaseMap();
-
-        String[] test = { "Chrome", "Firefox", "Internet Explorer", "Safari",
+        String[] test = {"Chrome", "Firefox", "Internet Explorer", "Safari",
                 "Opera", "Morrowind", "Oblivion", "NFS", "Half Life 2",
-                "Hitman", "Morrowind", "Oblivion", "NFS", "Half Life 2"
+                "Hitman"
         };
 
-        for (String s: test)
-        {
-            addBase(s, null);
+        for (String s : test) {
+            getInstance().add(s);
         }
 
 
@@ -49,31 +47,41 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 frame.setVisible(false);
                 String name = NewDB.run(frame, null);
-                if(name!=null) addBase(name, null);
+                if(name!=null) getInstance().add(name);
             }
         });
 
+        /*
         edit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String name = (String)list.getSelectedValue();
                 frame.setVisible(false);
                 String newName = NewDB.run(frame, name);
-                DatabaseNew db = bases.get(name);
-                deleteBase(name);
-                addBase(newName, db);
+                Database db = getInstance().remove(name);
+                getInstance().put(newName,db);
             }
         });
+        */
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = (String)list.getSelectedValue();
-                deleteBase(name);
+                try {
+                    System.out.println("model="+list.getModel());
+                    System.out.println("model.size="+list.getModel().getSize());
+                    Database db = (Database) list.getSelectedValue();
+                    System.out.println("remove db "+db);
+                    System.out.println("remove db -> "+getInstance().remove(db));
+                } catch (Throwable t) {
+                    System.out.println(t.toString());
+                }
             }
         });
     }
 
-    public void addBase(String name, DatabaseNew db){
+    /*
+
+    public void addBase(String name, Database db){
         bases.put(name, db);
         dlm.addElement(name);
     }
@@ -82,8 +90,10 @@ public class Main {
         bases.remove(name);
         dlm.removeElement(name);
     }
+    */
 
     public static void main(String[] args) {
         Main app = new Main();
     }
+
 }

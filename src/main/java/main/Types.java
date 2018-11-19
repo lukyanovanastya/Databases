@@ -27,18 +27,24 @@ public enum Types {
     }
 
     //converts object (string?) to Types.clazz
-    Object cast(String o) throws JsonParseException {
+    Object cast(Object o) throws DBError {
         if(o==null)return null;
+        if(clazz.isAssignableFrom(o.getClass())){
+            //value could be assigned to class
+            return o;
+        }
+        //try to convert through string
         try {
+            String s=o.toString();
             if(this==CHAR){
-                if(o.length()!=1)throw new Exception(this.name()+ " must have exactly one character, but met "+o.length());
-                return new Character(o.charAt(0));
+                if(s.length()!=1)throw new Exception(this.name()+ " must have exactly one character, but met "+s.length());
+                return new Character(s.charAt(0));
             }else {
-                Constructor c = clazz.getConstructor(o.getClass());
-                return c.newInstance(o);
+                Constructor c = clazz.getConstructor(s.getClass());
+                return c.newInstance(s);
             }
         }catch (Exception e) {
-            throw new JsonParseException("can't cast `"+o+"` to "+clazz+": "+e.getMessage());
+            throw new DBError("can't cast `"+o+"` of class "+o.getClass()+" to "+clazz+": "+e.getMessage());
         }
     }
 }

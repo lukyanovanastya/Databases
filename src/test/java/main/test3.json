@@ -1,0 +1,42 @@
+[
+	{
+		"name": "DB1",
+		"tables": [{
+				"name": "T1",
+				"columns": {
+					"col3": {
+						"type": "CHAR",
+						"data": [
+							"e",
+							"f",
+							"g",
+							"h"
+						]
+					}
+				}
+			}, {
+				"name": "T2",
+				"columns": {
+					"col1": {
+						"type": "STRING",
+						"data": [
+							"a",
+							"b",
+							"c",
+							"d"
+						]
+					},
+					"col2": {
+						"type": "INTEGER",
+						"data": [
+							1,
+							2,
+							3,
+							4
+						]
+					}
+				}
+			}
+		]
+	}
+]
