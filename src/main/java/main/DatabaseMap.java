@@ -3,10 +3,7 @@ package main;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 //import java.util.HashMap;
 //import java.util.Set;
@@ -18,12 +15,14 @@ public class DatabaseMap extends ArrayList<Database> {
 
     public static DatabaseMap getInstance(){return instance;}
 
-    public static DatabaseMap read(String file) throws Exception{
-        //Gson gson = new Gson();
+    public static DatabaseMap read(File file, DatabaseMap target) throws IOException{
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Column.class, new ColumnDeserializer());
         Gson gson = gsonBuilder.create();
-        return gson.fromJson(new FileReader(file), DatabaseMap.class);
+        DatabaseMap dbm = gson.fromJson(new FileReader(file), DatabaseMap.class);
+        if(target==null) target=new DatabaseMap();
+        target.addAll(dbm);
+        return target;
     }
 
     public void write(String file) throws IOException {
@@ -38,7 +37,7 @@ public class DatabaseMap extends ArrayList<Database> {
             if(d.name.equals(name)) throw new RuntimeException("DB with this name already exists");
         }
         this.add(new Database(name));
-        System.out.println(""+this.size());
+        //System.out.println(""+this.size());
     }
 
     public void remove(String name){

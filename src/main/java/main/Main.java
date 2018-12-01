@@ -3,6 +3,8 @@ package main;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import static main.DatabaseMap.getInstance;
 
@@ -22,7 +24,8 @@ public class Main {
         JFrame frame = new JFrame("Main");
         frame.setContentPane(this.panel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
+        frame.setSize(800,600);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
 
@@ -39,37 +42,53 @@ public class Main {
         for (String s : test) {
             getInstance().add(s);
         }
-        ((GenericListModel)list.getModel()).fireChange();
+        UITools.fireChange(list);
 
 
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frame.setVisible(false);
-                String name = NewDB.run(frame, null);
+                //frame.setVisible(false);
+                String name = UITools.prompt(list, "New DB", null);//NewDB.run(frame, null);
                 if(name!=null) getInstance().add(name);
+                UITools.fireChange(list);
             }
         });
 
-        /*
+        read.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                File file = UITools.selectFile(list);
+                if(file!=null){
+                    try {
+                        DatabaseMap.read(file, getInstance());
+                        UITools.fireChange(list);
+                    } catch (IOException e1) {
+                        UITools.error(list, e1);
+                    }
+                }
+                else {
+                    UITools.error(list, "File`s not selected");
+                }
+            }
+        });
+
         edit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String name = (String)list.getSelectedValue();
-                frame.setVisible(false);
-                String newName = NewDB.run(frame, name);
-                Database db = getInstance().remove(name);
-                getInstance().put(newName,db);
+                Database db = (Database) list.getSelectedValue();
+                db.name = UITools.prompt(list, "Edit DB", db.name);
+                UITools.fireChange(list);
             }
         });
-        */
+
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     Database db = (Database) list.getSelectedValue();
                     getInstance().remove(db);
-                    ((GenericListModel)list.getModel()).fireChange();
+                    UITools.fireChange(list);
                 } catch (Throwable t) {
                     System.out.println(t.toString());
                 }
@@ -77,18 +96,6 @@ public class Main {
         });
     }
 
-    /*
-
-    public void addBase(String name, Database db){
-        bases.put(name, db);
-        dlm.addElement(name);
-    }
-
-    public void deleteBase(String name){
-        bases.remove(name);
-        dlm.removeElement(name);
-    }
-    */
 
     public static void main(String[] args) {
         Main app = new Main();

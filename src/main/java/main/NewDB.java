@@ -22,7 +22,7 @@ public class NewDB extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 text = textBox.getText();
-                root.setVisible(true);
+                //root.setVisible(true);
                 dispose();
             }
         });
